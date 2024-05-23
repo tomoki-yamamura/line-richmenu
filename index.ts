@@ -1,22 +1,26 @@
 import * as line from "@line/bot-sdk";
 const MessagingApiClient = line.messagingApi.MessagingApiClient
 const MessagingBlobApiClient = line.messagingApi.MessagingApiBlobClient
+
 import fs from "fs";
+
 import env from "dotenv";
 env.config()
 
 
 const client = new MessagingApiClient({
   channelAccessToken: `${process.env.CHANNEL_ACCESS_TOKEN}`
-})
+});
+
 const client_blob = new MessagingBlobApiClient({
   channelAccessToken: `${process.env.CHANNEL_ACCESS_TOKEN}`
-})
+});
+
 
 const WIDTH = 2500;
 const HEIGHT = 1686;
-const HALF_HEIGHT = HEIGHT / 2; // Half height for the top and bottom
-const BOTTOM_AREA_HEIGHT = HALF_HEIGHT / 3; // Height of each tappable area in the bottom half
+const HALF_HEIGHT = HEIGHT / 2;
+const AREA_WIDTH = WIDTH / 3;
 
 const richMenu3players: line.RichMenu = {
   size: {
@@ -46,8 +50,8 @@ const richMenu3players: line.RichMenu = {
       bounds: {
         x: 0,
         y: HALF_HEIGHT,
-        width: WIDTH,
-        height: BOTTOM_AREA_HEIGHT
+        width: AREA_WIDTH,
+        height: HALF_HEIGHT
       },
       action: {
         type: "message",
@@ -57,10 +61,10 @@ const richMenu3players: line.RichMenu = {
     // Bottom tappable area 2
     {
       bounds: {
-        x: 0,
-        y: HALF_HEIGHT + BOTTOM_AREA_HEIGHT,
-        width: WIDTH,
-        height: BOTTOM_AREA_HEIGHT
+        x: AREA_WIDTH,
+        y: HALF_HEIGHT,
+        width: AREA_WIDTH,
+        height: HALF_HEIGHT
       },
       action: {
         type: "message",
@@ -70,10 +74,10 @@ const richMenu3players: line.RichMenu = {
     // Bottom tappable area 3
     {
       bounds: {
-        x: 0,
-        y: HALF_HEIGHT + 2 * BOTTOM_AREA_HEIGHT,
-        width: WIDTH,
-        height: BOTTOM_AREA_HEIGHT
+        x: AREA_WIDTH*2,
+        y: HALF_HEIGHT,
+        width: AREA_WIDTH,
+        height: HALF_HEIGHT
       },
       action: {
         type: "message",
@@ -111,8 +115,8 @@ const richMenu4players: line.RichMenu = {
       bounds: {
         x: 0,
         y: HALF_HEIGHT,
-        width: WIDTH,
-        height: BOTTOM_AREA_HEIGHT
+        width: AREA_WIDTH,
+        height: HALF_HEIGHT
       },
       action: {
         type: "message",
@@ -122,10 +126,10 @@ const richMenu4players: line.RichMenu = {
     // Bottom tappable area 2
     {
       bounds: {
-        x: 0,
-        y: HALF_HEIGHT + BOTTOM_AREA_HEIGHT,
-        width: WIDTH,
-        height: BOTTOM_AREA_HEIGHT
+        x: AREA_WIDTH,
+        y: HALF_HEIGHT,
+        width: AREA_WIDTH,
+        height: HALF_HEIGHT
       },
       action: {
         type: "message",
@@ -135,10 +139,10 @@ const richMenu4players: line.RichMenu = {
     // Bottom tappable area 3
     {
       bounds: {
-        x: 0,
-        y: HALF_HEIGHT + 2 * BOTTOM_AREA_HEIGHT,
-        width: WIDTH,
-        height: BOTTOM_AREA_HEIGHT
+        x: AREA_WIDTH*2,
+        y: HALF_HEIGHT,
+        width: AREA_WIDTH,
+        height: HALF_HEIGHT
       },
       action: {
         type: "message",
@@ -207,8 +211,8 @@ async function createBlobFromImagePath(imagePath: string): Promise<Blob> {
     const secondBlob = await createBlobFromImagePath('./assets/richmenu_4players.png')
 
     const defaultRichMenuId = await createRichMenuDefault(richMenu3players, defaultBlob)
-    await client.setDefaultRichMenu(defaultRichMenuId);
     const richMenuId = await createRichMenu(richMenu4players, secondBlob)
+    await client.setDefaultRichMenu(defaultRichMenuId);
     await client.createRichMenuAlias({
       richMenuAliasId: "richmenu-alias-3players",
       richMenuId: defaultRichMenuId
