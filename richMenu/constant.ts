@@ -1,0 +1,6 @@
+const WIDTH = 2500;
+const HEIGHT = 1686;
+const HALF_HEIGHT = HEIGHT / 2;
+const AREA_WIDTH = WIDTH / 3;
+
+export { WIDTH, HEIGHT, HALF_HEIGHT, AREA_WIDTH };
